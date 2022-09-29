@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.cjs",
   "scripts": {
-    "start": "nodemon index.cjs",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "env-cmd --file ./.env.development nodemon index.cjs"
+    "dev": "env-cmd --file ./.env.development nodemon index.js"
   },
   "author": "Diego Montoya",
   "license": "ISC",
