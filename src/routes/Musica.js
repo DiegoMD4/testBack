@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
-const { db } = require("../lib/config");
+const { db } = require("../database/config");
 const { Timestamp } = require("firebase-admin/firestore");
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.get("/Musica", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const result = db.collection("Musica").get();
 
@@ -21,7 +21,7 @@ router.get("/Musica", async (req, res) => {
   }
 });
 
-router.post("/Musica", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const agregar = db.collection("Musica").doc();
 
@@ -38,7 +38,7 @@ router.post("/Musica", async (req, res) => {
   }
 });
 
-router.delete("/Musica/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
 
     await db.collection('Musica').doc(req.params.id).delete();
@@ -49,7 +49,7 @@ router.delete("/Musica/:id", async (req, res) => {
   }
 });
 
-router.put("/Musica/:id", async (req, res)=>{
+router.put("/:id", async (req, res)=>{
   try {
     await db.collection("Musica").doc(req.params.id).update(req.body);
     res.status(200).send("Actualizado correctamente");
@@ -58,7 +58,7 @@ router.put("/Musica/:id", async (req, res)=>{
   }
 });
 
-router.get("/Musica/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const result = await db.collection("Musica").doc(req.params.id).get();
     res.status(200).json({

@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-router.post('/upload',upload.single('file'),(req, res) =>{
+router.post('/',upload.single('file'),(req, res) =>{
     let uriFile = `http://${req.hostname}:${req.socket.localPort}/images/${req.file.filename}`
     res.send({
         url: uriFile
