@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors')
 
 
-app.use('/images',express.static(__dirname +'./public/uploads'));
+app.use('/images',express.static('./public/uploads'));
 app.set('json spaces',2);
 app.use(express.json());
 app.use(cors());
