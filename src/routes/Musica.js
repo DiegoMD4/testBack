@@ -1,73 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
-const { db } = require("../database/config");
-const { Timestamp } = require("firebase-admin/firestore");
+const { getAll, create, remove, edit, getById } = require("../controllers/musica");
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
+router.get("/", getAll);
 
-router.get("/", async (req, res) => {
-  try {
-    const result = db.collection("Musica").get();
+router.post("/", create);
 
-    const music = (await result).docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    res.status(200).json(music);
-  } catch (error) {
-    res.status(400).json({ error: `An error ocurred ${error}` });
-  }
-});
+router.delete("/:id", remove);
 
-router.post("/", async (req, res) => {
-  try {
-    const agregar = db.collection("Musica").doc();
+router.put("/:id", edit);
 
-    await agregar.set({
-      Artista_Banda: req.body.Artista_Banda,
-      Cancion: req.body.Cancion,
-      Enlace: req.body.Enlace,
-      Fecha_Salida: Timestamp.now().toDate().toString(),
-    });
-
-    res.status(200).send("Creado correctamente");
-  } catch (error) {
-    res.status(400).json({ error: `An error ocurred ${error}` }); 
-  }
-});
-
-router.delete("/:id", async (req, res) => {
-  try {
-
-    await db.collection('Musica').doc(req.params.id).delete();
-    res.status(200).send("Elemento eliminado");
-
-  } catch (error) {
-    res.status(400).json({ error: `An error ocurred ${error}` });
-  }
-});
-
-router.put("/:id", async (req, res)=>{
-  try {
-    await db.collection("Musica").doc(req.params.id).update(req.body);
-    res.status(200).send("Actualizado correctamente");
-  } catch (error) {
-    res.status(400).json({ error: `An error ocurred ${error}` });
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  try {
-    const result = await db.collection("Musica").doc(req.params.id).get();
-    res.status(200).json({
-      id: result.id,
-      ...result.data()
-    });
-  } catch (error) {
-    res.status(400).json({ error: `An error ocurred ${error}` });
-  }
-});
+router.get("/:id", getById);
 
 module.exports = router;
