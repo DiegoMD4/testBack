@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors')
-const musicaController = require('./src/routes/musica')
+const musicController = require('./src/routes/musica')
 const imagesController = require('./src/routes/imagenes')
 const bodyParser = require("body-parser");
 
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.set('port',process.env.PORT || 4000);
 
 //Routes
-app.use("/Musica", musicaController)
+app.use("/Musica", musicController)
 app.use("/Upload", imagesController)
 
 // Motor de plantilla
