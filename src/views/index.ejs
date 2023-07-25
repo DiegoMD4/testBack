@@ -6,10 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-        <form action="/Musica" method="post" enctype="application/x-www-form-urlencoded">
-            <input type="text" id="Artista_Banda" name="Artista_Banda">
-            <input type="text" id="Cancion" name="Cancion">
-            <input type="text" id="Enlace" name="Enlace">
+        <form action="/Musica" method="post" enctype="multipart/form-data">
+            <input type="text" id="artistaBanda" name="artistaBanda">
+            <input type="text" id="cancion" name="cancion">
+            <input type="text" id="enlace" name="enlace">
+            <input type="file" id="pic" name="pic">
             <button type="submit">Agregar</button>
         </form>
 </body>
