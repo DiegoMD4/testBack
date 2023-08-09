@@ -5,7 +5,7 @@ const multer = require('multer');
 
 
 //multer
-const storage = multer.diskStorage({
+/* const storage = multer.diskStorage({
   destination: (req, file, cb)=>{
     cb(null, "./public/uploads");
   },
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({storage});
+const upload = multer({storage}); */
 
 const getAll = async (req, res) => {
     try {
@@ -33,16 +33,16 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-      let uriFile = `http://${req.hostname}:${req.socket.localPort}/images/${req.file.filename}`
+      /* let uriFile = `http://${req.hostname}:${req.socket.localPort}/images/${req.file.filename}` */
       const agregar = db.collection("Musica").doc();
       await agregar.set({
         artistaBanda: req.body.artistaBanda,
         cancion: req.body.cancion,
         enlace: req.body.enlace,
-        imagen: uriFile,
+        /* imagen: uriFile, */
         fechaPost: Timestamp.now().toDate().toString(),
       });
-      res.status(200).send({ url: uriFile, message: "Element created succesfully"});
+      res.status(200).send({ /* url: uriFile, */ message: "Element created succesfully"});
     } catch (error) {
       res.status(500).json({ error: `An error ocurred ${error}` }); 
     }
@@ -80,4 +80,4 @@ const getById = async (req, res) => {
     }
   }
 
-  module.exports = {getAll, create, remove, edit, getById, upload}
+  module.exports = {getAll, create, remove, edit, getById, /* upload */}

@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getAll, create, remove, edit, getById, upload} = require("../controllers/musica");
+const { getAll, create, remove, edit, getById, /* upload */} = require("../controllers/musica");
 
 router.get("/", getAll);
 
-router.post("/", upload.single('pic'), create);
+router.post("/", /* upload.single('pic'),  */create);
 
 router.delete("/:id", remove);
 
