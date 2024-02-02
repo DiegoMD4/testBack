@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "env-cmd --file ./.env.development nodemon index.js"
+    "dev": "env-cmd --file ./.env nodemon index.js"
   },
   "author": "Diego Montoya",
   "license": "ISC",

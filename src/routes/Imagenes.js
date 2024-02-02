@@ -1,6 +1,5 @@
 const express = require('express');
 const multer = require('multer');
-const sharp = require('sharp');
 const router = express.Router();
 
 const storage = multer.diskStorage({

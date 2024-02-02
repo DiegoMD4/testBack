@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 
 //Middlewares
 app.use('/images',express.static('./public/uploads'));
+app.use('/resource',express.static('./public/optimize'));
 app.set('json spaces',2);
 app.use(express.json());
 app.use(cors());
