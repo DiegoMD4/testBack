@@ -1,28 +1,15 @@
 const { db } = require("../database/config");
 const { Timestamp } = require("firebase-admin/firestore");
-const multer = require('multer');
+const {unlink} = require('fs-extra');
 const path = require('path');
-const sharp = require('sharp');
+const cloudinary = require('cloudinary').v2
 
-//multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb)=>{
-    cb(null, "./public/uploads");
-  },
-  filename: (req, file, cb)=>{
-    const ext = file.originalname.split(".").slice(-1)[0];
-    const parsedFileName = path.parse(file.originalname).name;
-    cb(null, `${file.fieldname}-${parsedFileName}-${Date.now()}.${ext}`);
-  }
-})
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 
-//sharp
-
-const helperImg = (filePath, filename, size = 200)=>{
-  return sharp(filePath).resize(size).toFile(`./public/optimize/${filename}`)
-}
-
-const upload = multer({storage});
+});
 
 const getAll = async (req, res) => {
     try {
@@ -40,29 +27,33 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-      let uriFile = `http://${req.hostname}:${req.socket.localPort}/images/${req.file.filename}`
-      let resizePic = `http://${req.hostname}:${req.socket.localPort}/resource/resize-${req.file.filename}`
-      helperImg(req.file.path, `resize-${req.file.filename}`, 200)
+      const result = await cloudinary.uploader.upload(req.file.path);
+      let uriFile = `http://${req.hostname}:${req.socket.localPort}/img/uploads/${req.file.filename}`
       const agregar = db.collection("Musica").doc();
       await agregar.set({
         artistaBanda: req.body.artistaBanda,
         cancion: req.body.cancion,
         enlace: req.body.enlace,
-        imagen: resizePic,
+        imagen: uriFile,
         fechaPost: Timestamp.now().toDate().toString(),
+        image_url: result.url,
+        public_id: result.public_id
       });
-      res.status(200).send({ url: uriFile, message: "Element created succesfully"});
-      console.log(req.body, resizePic)
+      await unlink(path.resolve(`./src/public/img/uploads/${req.file.filename}`));
+      res.status(200).json(agregar.data);
     } catch (error) {
       res.status(500).json({ error: `An error ocurred ${error}` }); 
-      console.log(req.body )
+      
     }
   }
 
 const remove =  async (req, res) => {
     try {
-  
-      await db.collection('Musica').doc(req.params.id).delete();
+      const result = await db.collection("Musica").doc(req.params.id).get();
+      await db.collection("Musica").doc(req.params.id).delete();
+      await cloudinary.uploader.destroy(result.data().public_id);
+      
+      
       res.status(200).send("Deleted succesfully");
   
     } catch (error) {
@@ -91,4 +82,4 @@ const getById = async (req, res) => {
     }
   }
 
-  module.exports = {getAll, create, remove, edit, getById, upload}
+  module.exports = {getAll, create, remove, edit, getById}
